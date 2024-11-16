@@ -1,63 +1,96 @@
-# virtual-try-on
-import os
-import cvzone
-import cv2
-from cvzone.PoseModule import PoseDetector
-cap = cv2.VideoCapture(0)
-detector = PoseDetector()
-shirtFolderPath = "Resources/Shirts"
-listShirts = os.listdir(shirtFolderPath)
-print(listShirts)
-fixedRatio = 400/184 # widthOfShirt/widthOfPoint11to12
-shirtRatioHeightWidth = 475/480
-imageNumber = 0
-imgButtonRight = cv2.imread("Resources/button.png", cv2.IMREAD_UNCHANGED)
-imgButtonLeft = cv2.flip(imgButtonRight, 1)
-counterRight = 0
-counterLeft = 0
-selectionSpeed = 10
+# Virtual Try-On README
 
-while True:
- success, img = cap.read()
- img = detector.findPose(img)
- lmList, bboxInfo = detector.findPosition(img, bboxWithHands=False,draw=False)
- if lmList:
-  #center = bboxInfo["center"]
-  lm11 = lmList[11][1:3]
-  lm12 = lmList[12][1:3]
-  #print(lmList[11][0:3])
-  imgShirt = cv2.imread(os.path.join(shirtFolderPath,listShirts[imageNumber]), cv2.IMREAD_UNCHANGED)
+## Virtual Try-On
 
-  widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
-  print(widthOfShirt)
-  imgShirt = cv2.resize(imgShirt, (widthOfShirt,int(widthOfShirt * shirtRatioHeightWidth)))
-  currentScale = (lm11[0] - lm12[0]) / 184
-  offset = int(44 * currentScale), int(48 * currentScale)
-  try:
-   img = cvzone.overlayPNG(img,imgShirt,(lm12[0]-offset[0],lm12[1]-offset[1]))
-  except:
-    pass
-  imgButtonLeft1 = cv2.resize(imgButtonLeft, (0,0),None,0.5,0.5)
-  imgButtonRight1 = cv2.resize(imgButtonRight, (0, 0), None, 0.5, 0.5)
-  img = cvzone.overlayPNG(img, imgButtonRight1, (500, 293))
-  img = cvzone.overlayPNG(img, imgButtonLeft1, (72, 293))
-  if lmList[16][1] < 100:
-      counterRight += 1
-      cv2.ellipse(img, (100, 330), (33, 33), 0, 0,counterRight * selectionSpeed, (0, 255, 0), 20)
-      if counterRight * selectionSpeed > 360:
-          counterRight = 0
-          if imageNumber < len(listShirts) - 1:
-              imageNumber += 1
-  elif lmList[15][1] > 400:
-      counterLeft += 1
-      cv2.ellipse(img, (540, 330), (33, 33), 0, 0,counterLeft * selectionSpeed, (0, 255, 0), 20)
-      if counterLeft * selectionSpeed > 360:
-          counterLeft = 0
-          if imageNumber > 0:
-              imageNumber -= 1
-  else:
-    counterRight = 0
-    counterLeft = 0
+This project is a **Virtual Try-On application** that allows users to see how different shirts look on them in real-time using a webcam. It leverages **computer vision** techniques for pose detection and overlays images of shirts onto the user’s body.
 
- cv2.imshow("image", img)
- cv2.waitKey(1)
+---
+
+## Features
+
+- **Real-time Pose Detection**: Tracks the position of key body landmarks.
+- **Shirt Overlay**: Dynamically adjusts shirt size and position to fit the user's body.
+- **Interactive Navigation**: Switch between shirts using hand gestures.
+- **Customizable**: Add your own shirt designs to the resource folder.
+
+---
+
+## Requirements
+
+- Python 3.7+
+- OpenCV
+- cvzone
+- A webcam
+
+---
+
+## Installation
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/virtual-try-on.git
+   cd virtual-try-on
+   ```
+
+2. **Install Dependencies**:
+   Use `pip` to install the required packages:
+   ```bash
+   pip install opencv-python cvzone
+   ```
+
+3. **Add Shirt Designs**:
+   Place PNG images of shirts (with transparent backgrounds) in the `Resources/Shirts` folder.
+
+---
+
+## Usage
+
+1. Run the application:
+   ```bash
+   python virtual_try_on.py
+   ```
+
+2. The application will open a webcam feed:
+   - Use **hand gestures** to navigate between shirts:
+     - **Right hand**: Swipe to switch to the next shirt.
+     - **Left hand**: Swipe to switch to the previous shirt.
+
+---
+
+## File Structure
+
+```
+virtual-try-on/
+│
+├── Resources/
+│   ├── Shirts/             # Folder containing shirt images
+│   └── button.png          # Button image for navigation
+│
+├── virtual_try_on.py       # Main Python script
+└── README.md               # Project documentation
+```
+
+---
+
+## Customization
+
+- Add more shirt designs by placing PNG files in the `Resources/Shirts` folder.
+- Adjust **fixedRatio** and **shirtRatioHeightWidth** values in the code to fine-tune the shirt scaling.
+
+---
+
+## Contributing
+
+Contributions are welcome! Feel free to:
+- Add new features.
+- Improve gesture control.
+- Optimize performance.
+
+Fork the repository, create a new branch for your feature, and submit a pull request.
+
+---
+
+## Acknowledgments
+
+- Inspired by the **cvzone** library for simplifying computer vision tasks.
+- Thanks to the **OpenCV** community for their resources and support.
