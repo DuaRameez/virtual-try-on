@@ -28,14 +28,14 @@ This project is a **Virtual Try-On application** that allows users to see how di
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/virtual-try-on.git
+   git clone https://github.com/DuaRameez/virtual-try-on.git
    cd virtual-try-on
    ```
 
 2. **Install Dependencies**:
    Use `pip` to install the required packages:
    ```bash
-   pip install opencv-python cvzone
+   pip install opencv-python cvzone mediapipe
    ```
 
 3. **Add Shirt Designs**:
