@@ -1,7 +1,8 @@
 streamlit
 opencv-python
 os
-cvzone
+cvzone==1.6.1
 cv2
 numpy
-mediapipe
+mediapipe==0.10.14
+pillow
