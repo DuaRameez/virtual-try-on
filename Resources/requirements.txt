@@ -1,5 +1,5 @@
 streamlit
-opencv-python-headless
+opencv-python-headless==4.8.178
 os
 cvzone==1.6.1
 cv2
