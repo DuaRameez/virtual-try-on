@@ -1,4 +1,7 @@
+streamlit
 opencv-python
 os
 cvzone
 cv2
+numpy
+mediapipe
